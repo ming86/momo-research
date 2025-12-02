@@ -2,16 +2,15 @@
 
 Welcome to **momo-research**. This is a public research log for **Context Engineering** and **Persistent Memory** for AI agents.
 
-This repository serves as a archive of insights, summaries, and practical takeaways from academic papers, whitepapers, and industry research focused on:
+This repository serves as a archive of insights from papers focused on:
 
 - **Context engineering**
 - **Long-term and persistent memory for agents**
 - **Memory architectures** (summaries, embeddings, symbolic, sequential)
-- **MCP-based tool ecosystems**
 - **Unified organizational memory**
 - **Agent workflows and memory-aware system design**
 
-Our goal is to translate complex technical research into **clear, actionable insights** that help developers, builders, and researchers understand how modern AI systems can leverage memory more effectively.
+Our goal is to translate complex technical research into **actionable insights** that help developers, builders, and researchers understand how AI agents can leverage memory more effectively.
 
 ---
 
