@@ -6,7 +6,7 @@ This repository serves as a archive of insights from papers focused on:
 
 - **Context engineering**
 - **Long-term and persistent memory for agents**
-- **Memory architectures** (summaries, embeddings, symbolic, sequential)
+- **Memory architectures**
 - **Unified organizational memory**
 - **Agent workflows and memory-aware system design**
 
@@ -28,6 +28,10 @@ Concise breakdowns of key papers, including:
 - [The Complexity Trap: Simple Observation Masking Is as Efficient as LLM Summarization for Agent Context Management](https://arxiv.org/abs/2508.21433)
 - Google's [Evo-Memory: Benchmarking LLM Agent Test-time Learning with Self-Evolving Memory](https://arxiv.org/abs/2511.20857)
 - [Multi-Agent Collaboration via Evolving Orchestration](https://arxiv.org/abs/2505.19591)
+- [CodeAct: Executable Code Actions Elicit Better LLM Agents](https://arxiv.org/abs/2402.01030)
+- [Recursive Language Models](https://alexzhang13.github.io/blog/2025/rlm/)
+
+Let me know if there are other memory related papers.
 
 ---
 
@@ -51,11 +55,17 @@ As we develop memory-as-a-tool modules for apps such as Slack, Gmail, and Linear
 - Architecture sketches
 - Design rationales
 - Lessons learned
-- Example implementations
 
 We are also building a lightweight **Memory Playground** where developers can test these modules, inspect how memory is stored and retrieved, and experiment with different context-engineering strategies in a real environment.
 
-These modules are part of our broader effort to build unified, persistent memory systems for agents.
+---
+
+## Stay Updated
+
+Follow progress here:
+
+- **Product website:** https://usemomo.com
+- **X:** https://x.com/cailynyongyong
 
 ---
 
@@ -66,14 +76,5 @@ If you're researching similar topics or want to collaborate, feel free to:
 - Open an issue
 - Submit a pull request
 - Reach out directly
-
----
-
-## Stay Updated
-
-Follow progress here and on:
-
-- **Twitter:** https://x.com/cailynyongyong
-- **Blog/Website:** https://usemomo.com
 
 ---
