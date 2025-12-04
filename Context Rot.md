@@ -1,4 +1,4 @@
-# Context Rot Guide from [Chroma Research](https://research.trychroma.com/context-rot)*
+# Context Rot Guide from [Chroma Research](https://research.trychroma.com/context-rot)\*
 
 > How Increasing Input Tokens Impacts LLM Performance
 
@@ -28,43 +28,42 @@
 
 ### Tested Models (18)
 
-| Provider | Models |
-|----------|--------|
-| **Anthropic** (5) | Claude Opus 4, Sonnet 4, Sonnet 3.7, Sonnet 3.5, Haiku 3.5 |
-| **OpenAI** (7) | o3, GPT-4.1, GPT-4.1 mini, GPT-4.1 nano, GPT-4o, GPT-4 Turbo, GPT-3.5 Turbo |
-| **Google** (3) | Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.0 Flash |
-| **Alibaba** (3) | Qwen3-235B-A22B, Qwen3-32B, Qwen3-8B |
-
+| Provider          | Models                                                                      |
+| ----------------- | --------------------------------------------------------------------------- |
+| **Anthropic** (5) | Claude Opus 4, Sonnet 4, Sonnet 3.7, Sonnet 3.5, Haiku 3.5                  |
+| **OpenAI** (7)    | o3, GPT-4.1, GPT-4.1 mini, GPT-4.1 nano, GPT-4o, GPT-4 Turbo, GPT-3.5 Turbo |
+| **Google** (3)    | Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.0 Flash                          |
+| **Alibaba** (3)   | Qwen3-235B-A22B, Qwen3-32B, Qwen3-8B                                        |
 
 ---
 
 ## 2. Key Terms
 
-| Term | Definition | Example |
-|------|------------|---------|
-| **Needle** | Target information hidden in a long document | "The best writing advice from my college professor was 'write every day'" |
-| **Haystack** | Long background text (10k-100k+ tokens) | Paul Graham essays, arXiv papers |
-| **Distractor** | Similar-but-incorrect information that confuses models | "The worst advice from my high school friend was 'don't write'" |
-| **Semantic similarity** | Meaning-based similarity (0-1 score via embedding cosine similarity) | "writing advice" and "composition tips" = high similarity |
-| **Lexical matching** | Keyword-based matching without semantic understanding | Q: "What's the magic number?" → Find "The magic number is 42" |
+| Term                    | Definition                                                           | Example                                                                   |
+| ----------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **Needle**              | Target information hidden in a long document                         | "The best writing advice from my college professor was 'write every day'" |
+| **Haystack**            | Long background text (10k-100k+ tokens)                              | Paul Graham essays, arXiv papers                                          |
+| **Distractor**          | Similar-but-incorrect information that confuses models               | "The worst advice from my high school friend was 'don't write'"           |
+| **Semantic similarity** | Meaning-based similarity (0-1 score via embedding cosine similarity) | "writing advice" and "composition tips" = high similarity                 |
+| **Lexical matching**    | Keyword-based matching without semantic understanding                | Q: "What's the magic number?" → Find "The magic number is 42"             |
 
 ---
 
 ## 3. Experiment Overview
 
-| Experiment | What it tests | Key finding |
-|------------|---------------|-------------|
-| Needle-Question Similarity | Does semantic similarity between question and answer affect performance? | Lower similarity → sharp performance drop in long contexts |
-| Distractor Impact | How do similar-but-wrong answers affect performance? | More distractors → worse performance |
-| Needle-Haystack Similarity | Does the needle "blending in" hurt performance? | Different topic from background → actually better performance |
-| Haystack Structure | Organized text vs shuffled text | **Paradox**: Shuffled text performs better |
-
+| Experiment                 | What it tests                                                            | Key finding                                                   |
+| -------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| Needle-Question Similarity | Does semantic similarity between question and answer affect performance? | Lower similarity → sharp performance drop in long contexts    |
+| Distractor Impact          | How do similar-but-wrong answers affect performance?                     | More distractors → worse performance                          |
+| Needle-Haystack Similarity | Does the needle "blending in" hurt performance?                          | Different topic from background → actually better performance |
+| Haystack Structure         | Organized text vs shuffled text                                          | **Paradox**: Shuffled text performs better                    |
 
 ---
 
 ## 4. Experiment Details
 
 ### 4.1 Needle-Question Similarity
+
 ![Needle-Question Similarity](https://research.trychroma.com/img/context_rot/longmemeval/needle_question_sim_arxiv.png)
 
 > **TL;DR**: When asking "What's the writing advice?", if the answer contains "writing" it's easy to find, but if it says "composition tips" it's harder. This experiment measures how the semantic similarity between question and answer affects performance as context length increases.
@@ -72,34 +71,28 @@
 **Experiment Design**
 
 - **Hypothesis**:
-  - Semantically similar question-answer pairs should be easier to find
-  - If short context works fine, does longer context maintain the same performance?
+
+  - If the question and the answer use similar words or meanings, the model finds the answer easily.
+  - If they use different phrasing, it gets much harder — especially when the context gets long.
+
+  Example:
+
+  Question: “What’s the writing advice?”
+  Easy answer: “…the most important writing advice is…”
+  Hard answer: “…here are some composition tips…” (same meaning, different words)
 
 - **Method**:
-  1. Extract question-answer pairs from diverse texts (Paul Graham essays, arXiv papers)
-  2. Measure semantic similarity of each pair using 5 embedding models (OpenAI, Jina, Voyage, etc.)
-  3. Group into high-similarity pairs (0.7-0.8) and low-similarity pairs (0.4-0.5)
-  4. Place same questions in haystacks of varying lengths, ask model to find answer
-  5. Compare accuracy by input length
-
-- **Similarity Diversification Method**:
-  - Reduce embedding vectors with UMAP (compress high-dimensional vectors to 2D/3D, clustering similar items)
-  - Cluster with HDBSCAN (separate clustered items into groups)
-  - This systematically captures "high similarity" and "low similarity" groups
-
-- **Measured Similarity Ranges**:
-  | Data Source | Similarity Range | Meaning |
-  |-------------|------------------|---------|
-  | PG Essays | 0.445 ~ 0.775 | Low (0.4s) to high (0.7s) distribution |
-  | arXiv | 0.521 ~ 0.829 | Generally higher similarity |
+  1. They collected question–answer pairs from Paul Graham essays and arXiv papers.
+  2. They measured how similar each Q–A pair was using multiple embedding models.
+  3. They grouped them into: High-similarity (0.7–0.8), Low-similarity (0.4–0.5)
+  4. They put these answers inside long documents (“haystacks”) and tested whether the model could find them.
 
 **Key Findings**
 
-- Short context (~1k tokens): High accuracy regardless of similarity
-- Long context (10k+ tokens): Sharp performance drop for low-similarity pairs
-- **Conclusion**: As context grows, semantic similarity between question and answer significantly impacts performance
+- Short context (~1k tokens): Models can find the answer easily, even if similarity is low.
+- Long context (10k+ tokens): High-similarity answers → still easy to find. Low-similarity answers → performance drops a lot (model gets confused because the wording is too different)
+- **Conclusion**: In long contexts, the model finds answers only if the question and answer are semantically similar. If the phrasing is different, accuracy collapses.
 - Note: Needle position (front/middle/back) has minimal effect (tested 11 positions)
-
 
 ---
 
@@ -110,12 +103,14 @@
 **Experiment Design**
 
 - **Hypothesis**:
+
   - Models find answers easily when only correct info exists, but get confused with similar wrong answers
   - More wrong answers = more confusion?
   - Which type of wrong answer causes the most confusion?
 
 - **Method**:
 - ![distractors_var](https://research.trychroma.com/img/context_rot/niah/distractors_var.png)
+
   1. Create 4 distractors for each needle
   2. Distractors have similar topic/format but different core content
   3. Test under three conditions:
@@ -147,7 +142,6 @@
   - Claude: States "cannot find answer" when uncertain → lowest hallucination
   - GPT: Outputs wrong answers confidently → highest hallucination
 
-
 ---
 
 ### 4.3 Needle-Haystack Similarity
@@ -157,8 +151,9 @@
 **Experiment Design**
 
 - **Hypothesis**:
-  - Hiding writing-related answer in writing essays = too similar, hard to find?
-  - Hiding ML-related answer in writing essays = stands out, easy to find?
+
+  - If you hide a writing-related answer inside writing essays, it might blend in and be harder to notice.
+  - If you hide an ML-related answer inside writing essays, it might stand out and be easier to detect.
 
 - **Method**:
 - ![needle_haystack](https://research.trychroma.com/img/context_rot/niah/needle_haystack.png)
@@ -179,9 +174,8 @@
 
 - **In PG haystack**: arXiv needle (low similarity) performs **better** than PG needle (high similarity)
   - **Interpretation**: When needle differs from background, it "stands out" for easier identification
-- **In arXiv haystack**: Almost no performance difference between needle types
-- **Conclusion**: Non-uniform pattern varies by situation. Cannot simply generalize "lower similarity = always better"
-
+- **In arXiv haystack**: Performance is nearly identical regardless of needle type
+- **Conclusion**: The relationship between needle-haystack similarity and performance is not uniform. Lower similarity sometimes helps, sometimes doesn’t—depends on the domain and structure of the haystack.
 
 ---
 
@@ -192,6 +186,7 @@
 **Experiment Design**
 
 - **Hypothesis**:
+
   - Common sense suggests organized text is easier to search
   - But do LLMs follow the same pattern?
 
@@ -216,7 +211,6 @@
 - Effect becomes more pronounced as context grows
 - Exact cause not yet determined (needs further research)
 
-
 ---
 
 ### 4.5 Repeated Words Task
@@ -226,10 +220,12 @@
 **Experiment Design**
 
 - **Hypothesis**:
+
   - Does even simple replication become harder with longer input?
   - Does accuracy differ when unique word is at front vs back?
 
 - **Method**:
+
   1. Generate input:
      - Example: "apple apple apple apple BANANA apple apple apple..."
      - Same word (apple) repeated with 1 unique word (BANANA) inserted
@@ -266,11 +262,13 @@
 **Experiment Design**
 
 - **Hypothesis**:
-  - If information exists, will models find it well?
-  - Or does irrelevant information interfere?
+
+  - If the answer is somewhere in the context, can models reliably retrieve it?
+  - Does large amounts of irrelevant conversation reduce retrieval accuracy?
 
 - **Method**:
 - ![longmemeval](https://research.trychroma.com/img/context_rot/longmemeval/ex.png)
+
   1. Extract 306 questions from LongMemEval_s benchmark
   2. Test each question under two conditions:
      - **Full (~113,000 tokens)**: Entire conversation history (mostly irrelevant)
@@ -289,9 +287,10 @@
 - **Conclusion**: Even when needed info exists, excessive irrelevant context hurts performance
 
 - **Model-specific patterns**:
+
   - **Claude**: **Largest** gap between Focused↔Full
-    - Reason: Tends to abstain ("cannot find answer") when uncertain
-    - Full condition: uncertainty ↑ → abstain ↑ → score ↓
+    - Reason: Claude abstains (“cannot find answer”) when uncertain.
+    - Full mode → more uncertainty → more abstentions → lower scores.
   - **GPT, Gemini, Qwen**: Good in Focused, degraded in Full (smaller gap than Claude)
 
 - **Difficulty by question type**:
@@ -300,23 +299,23 @@
   | Non-thinking | Knowledge Update > Multi-session > Temporal Reasoning |
   | Thinking mode | Knowledge Update > Temporal Reasoning > Multi-session |
 
-
 ---
 
 ## 5. Model Behavior Summary
 
-| Model | Hallucination | When Uncertain | Notable behavior |
-|-------|---------------|----------------|------------------|
-| **Claude** | ✅ Lowest | States "cannot find answer" | Opus 4: 2.89% task refusal |
-| **GPT** | ❌ Highest | Answers confidently even when wrong | GPT-3.5: 60% excluded by content filter |
-| **Gemini** | Medium | Starts generating random words | Issues begin at 500-750 words |
-| **Qwen** | Medium | Doesn't attempt task | Random output after 5,000 words |
+| Model      | Hallucination | When Uncertain                      | Notable behavior                        |
+| ---------- | ------------- | ----------------------------------- | --------------------------------------- |
+| **Claude** | ✅ Lowest     | States "cannot find answer"         | Opus 4: 2.89% task refusal              |
+| **GPT**    | ❌ Highest    | Answers confidently even when wrong | GPT-3.5: 60% excluded by content filter |
+| **Gemini** | Medium        | Starts generating random words      | Issues begin at 500-750 words           |
+| **Qwen**   | Medium        | Doesn't attempt task                | Random output after 5,000 words         |
 
 ---
 
 ## 6. Methodology
 
 - **Experiment Design**
+
   - 8 input lengths × 11 needle positions tested
   - Temperature=0 for deterministic output (some model exceptions)
   - Qwen models use YaRN extension: 32k → 131k tokens
@@ -331,6 +330,7 @@
 ## 7. Practical Guidelines
 
 ### Core Principle
+
 > **Context Engineering**: The careful construction and management of a model's context window to optimize performance.
 
 ```
@@ -349,17 +349,18 @@ WHERE and HOW it's placed = Determines performance
 
 ### Model Selection Guide
 
-| Requirement | Recommended | Reason |
-|-------------|-------------|--------|
-| Low hallucination | Claude | Most conservative, abstains when uncertain |
-| Long context required | All degrade | Compensate with context engineering |
-| Need uncertainty expression | Claude | Explicitly states "no answer found" |
+| Requirement                 | Recommended | Reason                                     |
+| --------------------------- | ----------- | ------------------------------------------ |
+| Low hallucination           | Claude      | Most conservative, abstains when uncertain |
+| Long context required       | All degrade | Compensate with context engineering        |
+| Need uncertainty expression | Claude      | Explicitly states "no answer found"        |
 
 ---
 
 ## 8. Limitations
 
 - **Test scope limitations**
+
   - This research focused on relatively simple information retrieval tasks
   - Real-world use requires synthesis and multi-step reasoning
   - **Actual degradation likely > these experiment results**
@@ -368,22 +369,6 @@ WHERE and HOW it's placed = Determines performance
   - Why does performance drop in logically organized text?
   - How does attention mechanism respond to structural coherence?
   - How to separate task complexity from context length effects?
-
----
-
-## 9. Future Research
-
-1. **Mechanistic Interpretability**
-   - Analyze internal workings to understand why certain structural patterns affect performance
-
-2. **Attention Mechanism Analysis**
-   - Research how input structure affects attention distribution
-
-3. **More Realistic Benchmarks**
-   - Complex task evaluation beyond current narrow-scope assessments
-
-4. **Complexity vs Length Separation**
-   - Separately measure task difficulty vs context length degradation
 
 ---
 
@@ -401,5 +386,5 @@ WHERE and HOW it's placed = Determines performance
 
 ---
 
-- **Source**: [Chroma Research](https://research.trychroma.com/context-rot)*
+- **Source**: [Chroma Research](https://research.trychroma.com/context-rot)\*
 - **Code**: [github.com/chroma-core/context-rot](https://github.com/chroma-core/context-rot)
