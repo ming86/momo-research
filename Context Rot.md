@@ -105,6 +105,7 @@
   - Which type of wrong answer causes the most confusion?
 
 - **Method**:
+- ![distractors_var](https://research.trychroma.com/img/context_rot/niah/distractors_var.png)
   1. Create 4 distractors for each needle
   2. Distractors have similar topic/format but different core content
   3. Test under three conditions:
