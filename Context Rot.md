@@ -55,7 +55,7 @@
 | Experiment | What it tests | Key finding |
 |------------|---------------|-------------|
 | Needle-Question Similarity | Does semantic similarity between question and answer affect performance? | Lower similarity → sharp performance drop in long contexts |
-| Distractor Impact | How do similar-but-wrong answers affect performance? | More distractors → worse performance, #2 and #3 most damaging |
+| Distractor Impact | How do similar-but-wrong answers affect performance? | More distractors → worse performance |
 | Needle-Haystack Similarity | Does the needle "blending in" hurt performance? | Different topic from background → actually better performance |
 | Haystack Structure | Organized text vs shuffled text | **Paradox**: Shuffled text performs better |
 
