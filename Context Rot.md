@@ -403,4 +403,3 @@ WHERE and HOW it's placed = Determines performance
 
 - **Source**: [Chroma Research](https://research.trychroma.com/context-rot)*
 - **Code**: [github.com/chroma-core/context-rot](https://github.com/chroma-core/context-rot)
-- **Dataset**: Available via Google Drive (see GitHub repo)
