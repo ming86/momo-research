@@ -1,4 +1,4 @@
-# **Evolving Contexts & Self-Evolving Memory: How LLMs Learn From Experience [Part 1]**
+# **[Part 1] Evolving Contexts & Self-Evolving Memory: How LLMs Learn From Experience**
 
 LLMs are shifting from static chatbots into dynamic agents: systems that can reason, act, observe results, and improve over time. Two lines of research push this frontier forward:
 
@@ -31,7 +31,7 @@ The two new frameworks, **ACE** and **EvoMemory,** fight these issues by enablin
 
 ---
 
-# 1. Problem
+## 1. Problem
 
 ### **Current Problem: Brevity bias and context collapse**
 
@@ -43,7 +43,7 @@ Over time, as agents try to update this context, it **collapses**.
 - domain-specific strategies get overwritten.
 - long-term expertise never accumulates.
 
-![Screenshot 2025-12-08 at 10.36.12 PM.png](attachment:22b885d4-7aa4-4796-88d5-75ea6fc95900:Screenshot_2025-12-08_at_10.36.12_PM.png)
+![Context Collapse](./public/ace%201.png)
 
 ### **Why This Happens**
 
@@ -59,7 +59,7 @@ The result: **Agents cannot evolve. They forget as fast as they learn.**
 
 ---
 
-# **2. Limitations of Current Approaches**
+## **2. Limitations of Current Approaches**
 
 ### **1. Full rewrites cause information destruction**
 
@@ -81,7 +81,7 @@ The ACE team specifically identifies that **the lack of structure + full rewrite
 
 ---
 
-# **3. What ACE Proposes**
+## **3. What ACE Proposes**
 
 A modular workflow of generation, reflection, and curation, while adding structured, incremental updates guided by a grow-and-refine principle.
 
@@ -97,9 +97,9 @@ The context becomes a **living playbook**.
 
 ---
 
-# **4. How ACE Solves the Problem**
+## **4. How ACE Solves the Problem**
 
-![Screenshot 2025-12-08 at 10.40.23 PM.png](attachment:3842c390-ff62-4d35-a381-e0a40a7cea77:Screenshot_2025-12-08_at_10.40.23_PM.png)
+![The ACE framework](./public/ace%202.png)
 
 Instead of condensing knowledge into summaires or static instructions, ACE treats contexts as evolving playbooks that continuously accumulates, refines, organizes strategies over time.
 
@@ -152,7 +152,7 @@ Ensures contexts remain compact and relevant:
 
 ---
 
-# **5. What ACE’s Full System Looks Like**
+## **5. What ACE’s Full System Looks Like**
 
 From the extracted text, ACE’s system always produces:
 
@@ -168,7 +168,7 @@ Think of it as:
 
 ---
 
-# **6. How They Tested ACE**
+## **6. How They Tested ACE**
 
 The paper evaluates ACE by:
 
@@ -192,7 +192,7 @@ They also tested:
 
 ---
 
-# **7. Results**
+## **7. Results**
 
 ### **1. ACE enables powerful self-improving agents**
 
